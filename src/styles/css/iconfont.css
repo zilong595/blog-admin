@@ -1,0 +1,175 @@
+@font-face {
+  font-family: "iconfont"; /* Project id 3938680 */
+  src: url('iconfont.woff2?t=1701762872913') format('woff2'),
+       url('iconfont.woff?t=1701762872913') format('woff'),
+       url('iconfont.ttf?t=1701762872913') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-delete:before {
+  content: "\e74b";
+}
+
+.icon-close:before {
+  content: "\e69a";
+}
+
+.icon-graph:before {
+  content: "\e78d";
+}
+
+.icon-left:before {
+  content: "\e628";
+}
+
+.icon-right:before {
+  content: "\e642";
+}
+
+.icon-zoom:before {
+  content: "\e61f";
+}
+
+.icon-label:before {
+  content: "\e7b4";
+}
+
+.icon-color:before {
+  content: "\e669";
+}
+
+.icon-warning:before {
+  content: "\eb65";
+}
+
+.icon-save:before {
+  content: "\ec09";
+}
+
+.icon-magnify:before {
+  content: "\ec13";
+}
+
+.icon-project:before {
+  content: "\e728";
+}
+
+.icon-confirm-project:before {
+  content: "\eabb";
+}
+
+.icon-clear:before {
+  content: "\e6dc";
+}
+
+.icon-space:before {
+  content: "\e648";
+}
+
+.icon-multiple:before {
+  content: "\e607";
+}
+
+.icon-plus:before {
+  content: "\e66d";
+}
+
+.icon-sale:before {
+  content: "\e62c";
+}
+
+.icon-design:before {
+  content: "\e621";
+}
+
+.icon-report:before {
+  content: "\e65d";
+}
+
+.icon-order:before {
+  content: "\e62d";
+}
+
+.icon-product:before {
+  content: "\e601";
+}
+
+.icon-user:before {
+  content: "\e6e1";
+}
+
+.icon-setting:before {
+  content: "\e78e";
+}
+
+.icon-home:before {
+  content: "\e7c6";
+}
+
+.icon-arrow-up:before {
+  content: "\e743";
+}
+
+.icon-notification:before {
+  content: "\e6c1";
+}
+
+.icon-arrow-down:before {
+  content: "\e7b2";
+}
+
+.icon-service:before {
+  content: "\e66a";
+}
+
+.icon-refresh:before {
+  content: "\e81a";
+}
+
+.icon-full-exit:before {
+  content: "\e878";
+}
+
+.icon-full-screen:before {
+  content: "\e635";
+}
+
+.icon-public:before {
+  content: "\e696";
+}
+
+.icon-clue:before {
+  content: "\e69d";
+}
+
+.icon-reserve:before {
+  content: "\e61a";
+}
+
+.icon-follow:before {
+  content: "\e6d4";
+}
+
+.icon-dimission:before {
+  content: "\e6c0";
+}
+
+.icon-search:before {
+  content: "\e86e";
+}
+
+.icon-account:before {
+  content: "\e60a";
+}
+
+.icon-password:before {
+  content: "\e69c";
+}
+
