@@ -16,11 +16,27 @@ request({
     }
 })
 
+export const createArticle = (data) =>
+request({
+    url: `/article/create`,
+    method: 'post',
+    data
+})
+
 export const updateArticle = (data) =>
 request({
     url: `/article/update`,
     method: 'post',
     data
+})
+
+export const deleteArticle = (id) =>
+request({
+    url: `/article/delete`,
+    method: 'post',
+    data: {
+        id: id
+    }
 })
 
 export const getCategoryList = (params) =>

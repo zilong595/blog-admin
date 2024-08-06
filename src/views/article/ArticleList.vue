@@ -15,7 +15,7 @@
                 </el-form-item>
             </el-form>
             <div class="left-panel">
-                <el-button icon="CopyDocument">添加</el-button>
+                <el-button type="primary" icon="Plus" @click="isAddVisible=true">添加</el-button>
             </div>
             <el-table v-loading="loading" element-loading-text="Loading..." :data="articleList" border :header-cell-style="{ backgroundColor:'#f5f7fa' }" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="55" align="center" />
@@ -25,38 +25,35 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="title" label="文章标题" min-width="300" align="center" show-overflow-tooltip />
-                <el-table-column  label="文章封面" width="150" align="center">
+                <el-table-column prop="cate_name" label="所属分类" width="180" align="center" />
+                <el-table-column prop="model" label="是否置顶" width="150" align="center">
                     <template #default="scope">
-                        <el-image style="width: 40px; height: 40px" :src="scope.row.image">
-                            <template #error>
-                                <div class="image-slot">
-                                    <el-icon><Picture /></el-icon>
-                                </div>
-                            </template>
-                        </el-image>
+                        <el-tag v-if="scope.row.is_top == 1">是</el-tag>
+                        <el-tag v-else type="success">否</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column prop="cate_name" label="所属分类" width="180" align="center" />
-                <el-table-column prop="model" label="是否置顶" min-width="200" align="center" show-overflow-tooltip />
                 <el-table-column prop="create_time" label="创建时间" width="200" align="center" />
+                <el-table-column prop="update_time" label="修改时间" width="200" align="center" />
                 <el-table-column fixed="right" label="操作" width="180" align="center">
                     <template #default="scope">
-                        <router-link :to="{path: '/article/edit',query: { id: scope.row.id } }">
-                            <el-button link type="primary" size="small">编辑</el-button>
-                        </router-link>
+                        <el-button link type="primary" size="small" @click="handleEdit(scope.row)">编辑</el-button>
                         <el-button link type="primary" size="small" @click="handleDelete(scope.row)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
             <pagination v-bind:total="total" v-bind:current-page="queryForm.page" v-bind:page-size="queryForm.limit" @sizeChange="handleSizeChange" @currentChange="handleCurrentChange" />
+            <ArticleAdd v-if="isAddVisible" v-bind:visible="isAddVisible" @update:visible="isAddVisible = $event" />
+            <ArticleEdit v-if="isEditVisible" v-bind:articleId="articleId" v-bind:visible="isEditVisible" @update:visible="isEditVisible = $event" />
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, getCurrentInstance } from 'vue';
-import { getArticleList, getCategoryList } from '@/api/article';
+import { ref, reactive, provide, onMounted, getCurrentInstance } from 'vue';
+import { getCategoryList, getArticleList, deleteArticle } from '@/api/article';
 import pagination from '@/components/PaginationView';
+import ArticleAdd from './components/ArticleAdd';
+import ArticleEdit from './components/ArticleEdit';
 
 const { appContext } = getCurrentInstance();
 
@@ -64,9 +61,20 @@ const total = ref(0);
 
 const loading = ref(false);
 
-const isDisableBtn = ref(true); // 是否禁用按钮
+const isDisableBtn = ref(true);
 
-// 搜索条件
+const isAddVisible = ref(false);
+
+const isEditVisible = ref(false);
+
+const articleId = ref(null);
+
+const articleList = ref([]);
+
+const categoryList = ref([]);
+
+const multipleSelection = ref([]);
+
 const queryForm = reactive({
     title: '',
     status: '',
@@ -75,31 +83,24 @@ const queryForm = reactive({
     limit: 20
 })
 
-const articleList = ref([]); // 文章列表
-
-const categoryList = ref([]); // 分类列表
-
-const multipleSelection = ref([]); //多选集合
-
-// 获取分类列表
 const fetchCategoryList = () => {
     return new Promise((resolve) => {
         const params = {
             status: 1,
         };
         getCategoryList(params).then((res) => {
-            categoryList.value = res.data.list;
+            categoryList.value = res.data;
             resolve();
         })
     })
 };
 
-// 获取文章列表
 const fetchArticleList = () => {
     return new Promise((resolve) => {
         loading.value = true;
         const params = {
             title: queryForm.title,
+            cate_id: queryForm.cateId,
             page: queryForm.page,
             limit: queryForm.limit
         };
@@ -112,12 +113,29 @@ const fetchArticleList = () => {
     })
 };
 
-// 删除文章
-const handleDelete = (row) => {
-    console.log(row);
+const handleEdit = (row) => {
+    articleId.value = row.id;
+    isEditVisible.value = true;
 };
 
-// 修改table选中状态
+const handleDelete = (row) => {
+    appContext.config.globalProperties.$confirm(
+        '确定要删除该文章吗',
+        '提示',
+        {
+            type: 'warning',
+        }
+    ).then(() => {
+        const id = row.id;
+        deleteArticle(id).then((res) => {
+            appContext.config.globalProperties.$message({ type: 'success', message: res.msg });
+            fetchArticleList();
+        })
+    }).catch(() => {
+        appContext.config.globalProperties.$message({ type: 'info', message: '已取消' });
+    });
+};
+
 const handleSelectionChange = (value) => {
     multipleSelection.value = value;
     isDisableBtn.value = value.length > 0 ? false : true;
@@ -133,9 +151,11 @@ const handleCurrentChange = (page) => {
     fetchArticleList();
 };
 
+provide('fetchArticleList', fetchArticleList);
+
 onMounted(() => {
-    //fetchCategoryList();
-    fetchArticleList();
+    fetchCategoryList(),
+    fetchArticleList()
 });
 </script>
 

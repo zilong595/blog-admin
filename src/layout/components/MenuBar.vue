@@ -30,7 +30,7 @@ const fetchMenuList = () => {
             name: '内容管理',
             path: '',
             children: [
-                { id: '1-1', name: '文章列表', path: '/article/list' },
+                { id: '1-1', name: '文章列表', path: '/content/article' },
             ]
         },
         {

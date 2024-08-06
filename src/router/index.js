@@ -10,26 +10,20 @@ const routes = [
             {
                 path: 'console',
                 name: 'ConsoleView',
-                meta:{ title: "首页" },
+                meta: { title: '首页' },
                 component: () => import('@/views/console/ConsoleView.vue')
             }
         ]
     },
     {
-        path: '/article',
+        path: '/content',
         component: LayoutView,
         children: [
             {
-                path: 'list',
+                path: 'article',
                 name: 'ArticleList',
-                meta:{ title: "文章列表" },
-                component: () => import('@/views/article/ArticleList.vue')
-            },
-            {
-                path: 'edit',
-                name: 'ArticleEdit',
-                meta:{ title: "编辑文章" },
-                component: () => import('@/views/article/ArticleEdit.vue')
+                meta: { title: '文章列表' },
+                component: () => import('@/views/article/ArticleList.vue'),
             },
         ]
     }

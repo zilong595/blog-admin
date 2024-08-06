@@ -13,7 +13,7 @@
                     </el-form-item>
                     <el-form-item label="文章封面">
                         <div class="upload-box" @click="pickerVisible = true">
-                            <el-image style="width: 100px; height: 100px" :src="articleInfo.image" v-if="articleInfo.image" />
+                            <el-image style="width: 100px; height: 100px" :src="imageSrc" v-if="imageSrc" />
                             <el-icon v-else>
                                 <Plus />
                             </el-icon>
@@ -34,7 +34,7 @@
 
 <script setup>
 import { ref, reactive, onMounted, getCurrentInstance } from 'vue';
-import { getCategoryList, getArticleDetail, updateArticle } from '@/api/article';
+import { getCategoryList, createArticle } from '@/api/article';
 import { useRouter } from 'vue-router';
 import WangEditor from '@/components/WangEditor';
 import ImagePicker from '@/components/ImagePicker';
@@ -43,7 +43,7 @@ const { appContext } = getCurrentInstance();
 
 const router = useRouter();
 
-const articleId = ref(null);
+const imageSrc = ref('');
 
 const categoryList = ref([]);
 
@@ -56,21 +56,7 @@ const formData = reactive({
     content: '',
 });
 
-const articleInfo = reactive({});
-
-const fetchArticleInfo = () => {
-    return new Promise((resolve) => {
-        const id = articleId.value;
-        getArticleDetail(id).then((res) => {
-            Object.assign(articleInfo, res.data);
-            formData.title = res.data.title;
-            formData.cateId = res.data.cate_id;
-            formData.content = res.data.content;
-            resolve();
-        })
-    })
-};
-
+// 获取分类列表
 const fetchCategoryList = () => {
     return new Promise((resolve) => {
         const params = {
@@ -83,37 +69,31 @@ const fetchCategoryList = () => {
     })
 };
 
+// 图片选择处理
 const handleSelectionChange = (event) => {
     const image = event.value[0];
+    imageSrc.value = image.path;
     formData.imageId = image.id;
 };
 
+// 提交
 const handleSubmit = () => {
     const data = {
-        id: articleId.value,
         title: formData.title,
-        content: formData.content
+        cate_id: formData.cateId,
+        content: formData.content,
+        image_id: formData.imageId
     };
 
-    updateArticle(data).then((res) => {
-        appContext.config.globalProperties.$message({
-            type: 'success',
-            message: res.msg,
-            duration: 1000,
-            onClose: () => {
-                console.log("?");
-                //router.push({ path:'/product/index' });
-            }
-        });
-    }).catch(() => {
+    createArticle(data).then((res) => {
+        appContext.config.globalProperties.$message({ type: 'success', message: res.msg });
+    }).catch((err) => {
+        console.log(err);
     })
 };
 
 onMounted(() => {
-    articleId.value = appContext.config.globalProperties.$route.query.id;
-
     fetchCategoryList();
-    fetchArticleInfo();
 });
 </script>
 
