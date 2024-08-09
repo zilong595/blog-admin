@@ -30,7 +30,8 @@ const fetchMenuList = () => {
             name: '内容管理',
             path: '',
             children: [
-                { id: '1-1', name: '文章列表', path: '/content/article' },
+                { id: '1-1', name: '文章管理', path: '/content/article' },
+                { id: '1-2', name: '留言管理', path: '/content/message' },
             ]
         },
         {
@@ -39,6 +40,7 @@ const fetchMenuList = () => {
             path: '',
             children: [
                 { id: '2-1', name: '系统日志', path: '/system/log' },
+                { id: '2-2', name: '栏目管理', path: '/system/columnManagement' }
             ]
         },
     ]

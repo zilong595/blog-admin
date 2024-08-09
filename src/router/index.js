@@ -25,6 +25,30 @@ const routes = [
                 meta: { title: '文章列表' },
                 component: () => import('@/views/article/ArticleList.vue'),
             },
+            {
+                path: 'message',
+                name: 'MessagetList',
+                meta: { title: '留言列表' },
+                component: () => import('@/views/message/MessageList.vue'),
+            }
+        ]
+    },
+    {
+        path: '/system',
+        component: LayoutView,
+        children: [
+            {
+                path: 'columnManagement',
+                name: 'ColumnManagement',
+                meta: { title: '栏目管理' },
+                component: () => import('@/views/column/ColumnManagement.vue'),
+            },
+            {
+                path: 'log',
+                name: 'SystemLog',
+                meta: { title: '系统日志' },
+                component: () => import('@/views/system/SystemLog.vue'),
+            }
         ]
     }
 ]

@@ -17,8 +17,7 @@
             <div class="left-panel">
                 <el-button type="primary" icon="Plus" @click="isAddVisible=true">添加</el-button>
             </div>
-            <el-table v-loading="loading" element-loading-text="Loading..." :data="articleList" border :header-cell-style="{ backgroundColor:'#f5f7fa' }" @selection-change="handleSelectionChange">
-                <el-table-column type="selection" width="55" align="center" />
+            <el-table v-loading="loading" element-loading-text="Loading..." :data="articleList" border :header-cell-style="{ backgroundColor:'#f5f7fa' }">
                 <el-table-column type="index" label="序号" width="100" align="center" >
                     <template #default="scope">
                         <span>{{(queryForm.page - 1) * queryForm.limit + scope.$index + 1}}</span>
@@ -32,8 +31,7 @@
                         <el-tag v-else type="success">否</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column prop="create_time" label="创建时间" width="200" align="center" />
-                <el-table-column prop="update_time" label="修改时间" width="200" align="center" />
+                <el-table-column prop="create_time" label="操作时间" width="200" align="center" />
                 <el-table-column fixed="right" label="操作" width="180" align="center">
                     <template #default="scope">
                         <el-button link type="primary" size="small" @click="handleEdit(scope.row)">编辑</el-button>
@@ -42,18 +40,14 @@
                 </el-table-column>
             </el-table>
             <pagination v-bind:total="total" v-bind:current-page="queryForm.page" v-bind:page-size="queryForm.limit" @sizeChange="handleSizeChange" @currentChange="handleCurrentChange" />
-            <ArticleAdd v-if="isAddVisible" v-bind:visible="isAddVisible" @update:visible="isAddVisible = $event" />
-            <ArticleEdit v-if="isEditVisible" v-bind:articleId="articleId" v-bind:visible="isEditVisible" @update:visible="isEditVisible = $event" />
         </div>
     </div>
 </template>
 
 <script setup>
 import { ref, reactive, provide, onMounted, getCurrentInstance } from 'vue';
-import { getCategoryList, getArticleList, deleteArticle } from '@/api/article';
+import { getArticleList, deleteArticle } from '@/api/article';
 import pagination from '@/components/PaginationView';
-import ArticleAdd from './components/ArticleAdd';
-import ArticleEdit from './components/ArticleEdit';
 
 const { appContext } = getCurrentInstance();
 
@@ -61,17 +55,9 @@ const total = ref(0);
 
 const loading = ref(false);
 
-const isAddVisible = ref(false);
-
-const isEditVisible = ref(false);
-
-const articleId = ref(null);
-
 const articleList = ref([]);
 
 const categoryList = ref([]);
-
-const multipleSelection = ref([]);
 
 const queryForm = reactive({
     title: '',
@@ -80,18 +66,6 @@ const queryForm = reactive({
     page: 1,
     limit: 20
 })
-
-const fetchCategoryList = () => {
-    return new Promise((resolve) => {
-        const params = {
-            status: 1,
-        };
-        getCategoryList(params).then((res) => {
-            categoryList.value = res.data;
-            resolve();
-        })
-    })
-};
 
 const fetchArticleList = () => {
     return new Promise((resolve) => {
@@ -134,10 +108,6 @@ const handleDelete = (row) => {
     });
 };
 
-const handleSelectionChange = (value) => {
-    multipleSelection.value = value;
-};
-
 const handleSizeChange = (size) => {
     queryForm.limit = size;
     fetchArticleList();
@@ -151,7 +121,6 @@ const handleCurrentChange = (page) => {
 provide('fetchArticleList', fetchArticleList);
 
 onMounted(() => {
-    fetchCategoryList(),
     fetchArticleList()
 });
 </script>
